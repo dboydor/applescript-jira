@@ -29,6 +29,8 @@ Or from a specific ticket page:
     	"REQUIREMENT", {"IN DESIGN", "Start Design"},
     	"BACKLOG(DEV)", {"IN PROGRESS", "Start Dev", "IN DESIGN", "Need Design"},
 
+  3. Modidfy code further down that deals with which actions have required dialogs (and data entered) that you have to navigate.
+
 **Features:**
 
   1. Can be run from Agile page (and you can select ticket to change state on)
