@@ -29,7 +29,9 @@ Or from a specific ticket page:
     	"REQUIREMENT", {"IN DESIGN", "Start Design"},
     	"BACKLOG(DEV)", {"IN PROGRESS", "Start Dev", "IN DESIGN", "Need Design"},
 
-  3. Modidfy code further down that deals with which actions have required dialogs (and data entered) that you have to navigate.
+  3. Modify code further down that deals with which actions have required dialogs (and data entered) that have to be navigated.
+
+    if action is "Start Design" or ...
 
 **Features:**
 
