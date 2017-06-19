@@ -17,11 +17,12 @@ Or from a specific ticket page:
 **Requirements:**
 
   1. Safari browser
-	a. Turn on Develop menu
+
+	- Turn on Develop menu
 		* Preferences
 		* Advanced Tab
 		* Turn on "Show Develop menu in menu bar"
-	b. Enable in Develop menu: "Allow Javascript from Apple Events"
+	- Enable in Develop menu: "Allow Javascript from Apple Events"
 
   2. Edit Applescript to model your state workflow.  Each top-level state is on the left, and then the transition states and actions to get you there.
 
