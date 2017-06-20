@@ -33,6 +33,8 @@
 set developerAssigned to "na"
 set developerReviewerDevLead to "na"
 
+set useHardcodedStates to true
+
 --- Data structure modelling states and actions in JIRA
 set states to {¬
 	"REQUIREMENT", {"IN DESIGN", "Start Design"}, ¬
@@ -57,6 +59,24 @@ set statesDirect to {¬
 	"DUPLICATE", "Duplicate", ¬
 	"HIBERNATED", "Hibernated", ¬
 	"CLOSED", "Closed"}
+
+set statesTo to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR DEV TEST", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesToLabel to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"Dev Testing", ¬
+	"QA", ¬
+	"Done"}
 
 set browserUrl to browserGetUrl()
 log browserUrl
@@ -84,13 +104,19 @@ end if
 
 set stateFrom to browserGetState()
 
---- Get all the states that are reachable from this current state
-set availableStates to sortArray(getStatePath(states, stateFrom))
+if useHardcodedStates is true then
+	set availableStates to statesToLabel
+else
+	--- Get all the states that are reachable from this current state
+	set availableStates to sortArray(getStatePath(states, stateFrom))
+	set stateFrom to stringUpper(stateFrom)
+end if
 
 set stateTo to choose from list availableStates with prompt "Current ticket state is:
-" & stringUpper(stateFrom) & "
+" & stateFrom & "
 
 Change to:"
+
 if stateTo is false then
 	--- Close the tab we created after we're done
 	if createdTab is true then
@@ -98,6 +124,11 @@ if stateTo is false then
 	end if
 
 	error number -128 (* user cancelled *)
+else if useHardcodedStates is true then
+	set foundOffset to findArray(statesToLabel, stateTo)
+	--- Wasn't working until I made it two-step assignment
+	set newState to (item foundOffset of statesTo as string)
+	set stateTo to newState
 end if
 
 set actionPath to getActionPath(states, stateFrom, stringTrimTrailing(stateTo))
@@ -385,7 +416,7 @@ on getStatePathDepth(states, stateFrom, depth, stateList, stateExclude)
 	repeat until i > (count of itemStates)
 		set subState to item i of itemStates
 
-		if findArray(stateList, subState) is false then
+		if findArray(stateList, subState) is -1 then
 			if subState is not stateExclude then
 				set stateList to stateList & subState
 			end if
@@ -501,16 +532,16 @@ on findArray(source, value)
 	set i to 1
 
 	repeat until i > (count of source)
-		set sourceItem to item i of source
+		set sourceItem to item i of source as string
 
-		if sourceItem is value then
-			return true
+		if sourceItem is value as string then
+			return i
 		end if
 
 		set i to i + 1
 	end repeat
 
-	return false
+	return -1
 end findArray
 
 on sortArray(source)
