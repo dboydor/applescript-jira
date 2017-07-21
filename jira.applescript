@@ -54,6 +54,19 @@ set states to {¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
+--- Another workflow for bug tickets
+set states2 to {¬
+	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
+	"BACKLOG(DEV)", {"IN PROGRESS", "Start", "OPEN", "Need More Info"}, ¬
+	"IN PROGRESS", {"IN DEV REVIEW", "Sent for Dev Review"}, ¬
+	"IN DEV REVIEW", {"IN PROGRESS", "Need Dev Rework", "WAITING FOR BUILD", "Ready for Build"}, ¬
+	"WAITING FOR BUILD", {"READY FOR QA", "Build Done"}, ¬
+	"READY FOR QA", {"QA IN PROGRESS", "Start QA"}, ¬
+	"QA IN PROGRESS", {"QA REJECTED", "Reject", "CLOSED", "QA Verified", "READY FOR PRODUCTION", "QA Complete"}, ¬
+	"QA REJECTED", {"IN PROGRESS", "Rework on Code"}, ¬
+	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
+	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
+
 set statesDirect to {¬
 	"ARCHIVE", "Archive", ¬
 	"DUPLICATE", "Duplicate", ¬
@@ -75,6 +88,22 @@ set statesToLabel to {¬
 	"Code Complete", ¬
 	"Merged", ¬
 	"Dev Testing", ¬
+	"QA", ¬
+	"Done"}
+
+set statesTo2 to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesToLabel2 to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
 	"QA", ¬
 	"Done"}
 
@@ -101,6 +130,13 @@ if browserUrl does not contain "/DISPLAY-" then
 end if
 
 --- display dialog "You choose: " & ticket
+
+--- If SPR Bug Workflow, then use different set of states
+if browserIsWorkflow("SPR+Bug+Workflow") is true then
+	set states to states2
+	set statesTo to statesTo2
+	set statesToLabel to statesToLabel2
+end if
 
 set stateFrom to browserGetState()
 
@@ -343,6 +379,20 @@ on browserSetTextArea(label, value)
 
 	return result
 end browserSetTextArea
+
+on browserIsWorkflow(workflow)
+	tell application "Safari"
+		tell front window
+			tell current tab
+				set cmd to "
+          document.querySelectorAll(\"a[href*='" & workflow & "']\").length === 0 ? false : true"
+				set result to do JavaScript cmd
+			end tell
+		end tell
+	end tell
+
+	return result
+end browserIsWorkflow
 
 on browserDialogOpen()
 	tell application "Safari"
