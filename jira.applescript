@@ -57,6 +57,7 @@ set states to {¬
 --- Another workflow for bug tickets
 set states2 to {¬
 	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
+	"OPEN", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
 	"BACKLOG(DEV)", {"IN PROGRESS", "Start", "OPEN", "Need More Info"}, ¬
 	"IN PROGRESS", {"IN DEV REVIEW", "Sent for Dev Review"}, ¬
 	"IN DEV REVIEW", {"IN PROGRESS", "Need Dev Rework", "WAITING FOR BUILD", "Ready for Build"}, ¬
@@ -425,7 +426,7 @@ end getAction
 on getActionId(pos)
 	tell application "Safari"
 		tell document 1
-			set result to do JavaScript "var element = document.getElementById('opsbar-transitions_more_drop').getElementsByClassName('issueaction-workflow-transition')[" & (pos) & "]; element.attributes['id'].value;"
+			set result to do JavaScript "var element = document.getElementsByClassName('issueaction-workflow-transition')[" & (pos) & "]; element.attributes['id'].value;"
 		end tell
 	end tell
 
@@ -435,7 +436,7 @@ end getActionId
 on getActionName(pos)
 	tell application "Safari"
 		tell document 1
-			set result to do JavaScript "var element = document.getElementById('opsbar-transitions_more_drop').getElementsByClassName('issueaction-workflow-transition')[" & (pos) & "]; element.children[0].innerHTML;"
+			set result to do JavaScript "var element = document.getElementsByClassName('issueaction-workflow-transition')[" & (pos) & "]; element.children[0].innerHTML;"
 		end tell
 	end tell
 	return stringTrimTrailing(result)
