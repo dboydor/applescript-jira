@@ -190,6 +190,7 @@ repeat until i > (count of actionPath)
 		action is "Start Dev" or ¬
 		action is "Sent for Dev Review" or ¬
 		action is "Sent for Build" or ¬
+		action is "Ready for Build" or ¬
 		action is "Dev Tested" or ¬
 		action is "QA Complete" or ¬
 		action is "QA Verified" or ¬
@@ -210,7 +211,7 @@ repeat until i > (count of actionPath)
 			browserCheckById(browserGetCheckbox("No"))
 		end if
 
-		if action is "Sent for Build" then
+		if action is "Sent for Build" or action is "Ready for Build" then
 			repeat while browserGetCheckbox("None") is ""
 				delay 1
 			end repeat
