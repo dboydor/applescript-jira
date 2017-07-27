@@ -55,10 +55,24 @@ set states to {¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
 --- Another workflow for bug tickets
-set states2 to {¬
+set states_SPR_Workflow to {¬
 	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
 	"OPEN", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
 	"BACKLOG(DEV)", {"IN PROGRESS", "Start", "OPEN", "Need More Info"}, ¬
+	"IN PROGRESS", {"IN DEV REVIEW", "Sent for Dev Review"}, ¬
+	"IN DEV REVIEW", {"IN PROGRESS", "Need Dev Rework", "WAITING FOR BUILD", "Ready for Build"}, ¬
+	"WAITING FOR BUILD", {"READY FOR QA", "Build Done"}, ¬
+	"READY FOR QA", {"QA IN PROGRESS", "Start QA"}, ¬
+	"QA IN PROGRESS", {"QA REJECTED", "Reject", "CLOSED", "QA Verified", "READY FOR PRODUCTION", "QA Complete"}, ¬
+	"QA REJECTED", {"IN PROGRESS", "Rework on Code"}, ¬
+	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
+	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
+
+--- Another workflow for support tickets
+set states_L3_Support_Workflow to {¬
+	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
+	"NEED CONFIRMATION", {"BACKLOG(DEV)", "Issue Confirmed", "OPEN", "Need More Info"}, ¬
+	"BACKLOG(DEV)", {"IN PROGRESS", "Start", "NEED CONFIRMATION", "Need More Info"}, ¬
 	"IN PROGRESS", {"IN DEV REVIEW", "Sent for Dev Review"}, ¬
 	"IN DEV REVIEW", {"IN PROGRESS", "Need Dev Rework", "WAITING FOR BUILD", "Ready for Build"}, ¬
 	"WAITING FOR BUILD", {"READY FOR QA", "Build Done"}, ¬
@@ -83,6 +97,22 @@ set statesTo to {¬
 	"READY FOR QA", ¬
 	"CLOSED"}
 
+set statesTo_SPR_Workflow to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesTo_L3_Support_Workflow to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
 set statesToLabel to {¬
 	"Backlog", ¬
 	"In Progress", ¬
@@ -92,15 +122,15 @@ set statesToLabel to {¬
 	"QA", ¬
 	"Done"}
 
-set statesTo2 to {¬
-	"BACKLOG(DEV)", ¬
-	"IN PROGRESS", ¬
-	"IN DEV REVIEW", ¬
-	"WAITING FOR BUILD", ¬
-	"READY FOR QA", ¬
-	"CLOSED"}
+set statesToLabel_SPR_Workflow to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"QA", ¬
+	"Done"}
 
-set statesToLabel2 to {¬
+set statesToLabel_L3_Support_Workflow to {¬
 	"Backlog", ¬
 	"In Progress", ¬
 	"Code Complete", ¬
@@ -134,9 +164,16 @@ end if
 
 --- If SPR Bug Workflow, then use different set of states
 if browserIsWorkflow("SPR+Bug+Workflow") is true then
-	set states to states2
-	set statesTo to statesTo2
-	set statesToLabel to statesToLabel2
+	set states to states_SPR_Workflow
+	set statesTo to statesTo_SPR_Workflow
+	set statesToLabel to statesToLabel_SPR_Workflow
+end if
+
+--- If L3 Support Workflow, then use different set of states
+if browserIsWorkflow("L3+Support+Workflow") is true then
+	set states to states_L3_Support_Workflow
+	set statesTo to statesTo_L3_Support_Workflow
+	set statesToLabel to statesToLabel_L3_Support_Workflow
 end if
 
 set stateFrom to browserGetState()
@@ -187,6 +224,7 @@ repeat until i > (count of actionPath)
 	if action is "Start Design" or ¬
 		action is "Sent for Design Review" or ¬
 		action is "Design Approved" or ¬
+		action is "Issue Confirmed" or ¬
 		action is "Start Dev" or ¬
 		action is "Sent for Dev Review" or ¬
 		action is "Sent for Build" or ¬
