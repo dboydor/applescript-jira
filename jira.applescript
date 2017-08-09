@@ -82,6 +82,24 @@ set states_L3_Support_Workflow to {¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
+--- Another workflow for support tickets
+set states_Release_Manual_Workflow to {¬
+	"REQUIREMENT", {"IN DESIGN", "Start Design"}, ¬
+	"IN DESIGN", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
+	"BACKLOG(DEV)", {"IN PROGRESS", "Start Dev"}, ¬
+	"IN DEV REVIEW", {"UX AUDIT", "Sent for UX Audit", "WAITING FOR BUILD", "Sent for Build"}, ¬
+	"DEV UNIT TEST", {"IN DEV REVIEW", "Sent for Dev Review"}, ¬
+	"UX AUDIT", {"IN DEV REVIEW", "UX Audit completed"}, ¬
+	"IN PROGRESS", {"DEV UNIT TEST", "Unit Testing", "IN DEV REVIEW", "Sent for Dev Review"}, ¬
+	"WAITING FOR BUILD", {"READY FOR DEV TEST", "Build Done"}, ¬
+	"READY FOR DEV TEST", {"READY FOR QA", "Dev Tested"}, ¬
+	"READY FOR QA", {"QA IN PROGRESS", "QA takes over"}, ¬
+	"QA IN PROGRESS", {"QA Blocked", "QA Blocked", "CLOSED", "QA Verified", "READY FOR PRODUCTION", "QA Complete"}, ¬
+	"QA BLOCKED", {"QA IN PROGRESS", "QA Resumed"}, ¬
+	"QA REJECTED", {"IN PROGRESS", "Rework on Code"}, ¬
+	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
+	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
+
 set statesDirect to {¬
 	"ARCHIVE", "Archive", ¬
 	"DUPLICATE", "Duplicate", ¬
@@ -113,6 +131,15 @@ set statesTo_L3_Support_Workflow to {¬
 	"READY FOR QA", ¬
 	"CLOSED"}
 
+set statesTo_Release_Manual_Workflow to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR DEV TEST", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
 set statesToLabel to {¬
 	"Backlog", ¬
 	"In Progress", ¬
@@ -135,6 +162,15 @@ set statesToLabel_L3_Support_Workflow to {¬
 	"In Progress", ¬
 	"Code Complete", ¬
 	"Merged", ¬
+	"QA", ¬
+	"Done"}
+
+set statesToLabel_Release_Manual_Workflow to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"Dev Testing", ¬
 	"QA", ¬
 	"Done"}
 
@@ -174,6 +210,13 @@ if browserIsWorkflow("L3+Support+Workflow") is true then
 	set states to states_L3_Support_Workflow
 	set statesTo to statesTo_L3_Support_Workflow
 	set statesToLabel to statesToLabel_L3_Support_Workflow
+end if
+
+--- If Release Manual Workflow, then use different set of states
+if browserIsWorkflow("Release+Manual") is true then
+	set states to states_Release_Manual_Workflow
+	set statesTo to statesTo_Release_Manual_Workflow
+	set statesToLabel to statesToLabel_Release_Manual_Workflow
 end if
 
 set stateFrom to browserGetState()
