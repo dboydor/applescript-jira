@@ -54,6 +54,30 @@ set states to {¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
+set statesDirect to {¬
+	"ARCHIVE", "Archive", ¬
+	"DUPLICATE", "Duplicate", ¬
+	"HIBERNATED", "Hibernated", ¬
+	"CLOSED", "Closed"}
+
+set statesTo to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR DEV TEST", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesToLabel to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"Dev Testing", ¬
+	"QA", ¬
+	"Done"}
+
 --- Another workflow for bug tickets
 set states_SPR_Workflow to {¬
 	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
@@ -68,6 +92,22 @@ set states_SPR_Workflow to {¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
+set statesTo_SPR_Workflow to {¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesToLabel_SPR_Workflow to {¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"QA", ¬
+	"Done"}
+
 --- Another workflow for support tickets
 set states_L3_Support_Workflow to {¬
 	"REQUIREMENT", {"BACKLOG(DEV)", "Queue for Dev"}, ¬
@@ -81,6 +121,24 @@ set states_L3_Support_Workflow to {¬
 	"QA REJECTED", {"IN PROGRESS", "Rework on Code"}, ¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
+
+set statesTo_L3_Support_Workflow to {¬
+	"NEEDS CONFIRMATION", ¬
+	"BACKLOG(DEV)", ¬
+	"IN PROGRESS", ¬
+	"IN DEV REVIEW", ¬
+	"WAITING FOR BUILD", ¬
+	"READY FOR QA", ¬
+	"CLOSED"}
+
+set statesToLabel_L3_Support_Workflow to {¬
+	"Requirements", ¬
+	"Backlog", ¬
+	"In Progress", ¬
+	"Code Complete", ¬
+	"Merged", ¬
+	"QA", ¬
+	"Done"}
 
 --- Another workflow for support tickets
 set states_Release_Manual_Workflow to {¬
@@ -100,37 +158,6 @@ set states_Release_Manual_Workflow to {¬
 	"READY FOR PRODUCTION", {"CLOSED", "Deployed"}, ¬
 	"CLOSED", {"BACKLOG(DEV)", "Re-Open"}}
 
-set statesDirect to {¬
-	"ARCHIVE", "Archive", ¬
-	"DUPLICATE", "Duplicate", ¬
-	"HIBERNATED", "Hibernated", ¬
-	"CLOSED", "Closed"}
-
-set statesTo to {¬
-	"BACKLOG(DEV)", ¬
-	"IN PROGRESS", ¬
-	"IN DEV REVIEW", ¬
-	"WAITING FOR BUILD", ¬
-	"READY FOR DEV TEST", ¬
-	"READY FOR QA", ¬
-	"CLOSED"}
-
-set statesTo_SPR_Workflow to {¬
-	"BACKLOG(DEV)", ¬
-	"IN PROGRESS", ¬
-	"IN DEV REVIEW", ¬
-	"WAITING FOR BUILD", ¬
-	"READY FOR QA", ¬
-	"CLOSED"}
-
-set statesTo_L3_Support_Workflow to {¬
-	"BACKLOG(DEV)", ¬
-	"IN PROGRESS", ¬
-	"IN DEV REVIEW", ¬
-	"WAITING FOR BUILD", ¬
-	"READY FOR QA", ¬
-	"CLOSED"}
-
 set statesTo_Release_Manual_Workflow to {¬
 	"BACKLOG(DEV)", ¬
 	"IN PROGRESS", ¬
@@ -139,31 +166,6 @@ set statesTo_Release_Manual_Workflow to {¬
 	"READY FOR DEV TEST", ¬
 	"READY FOR QA", ¬
 	"CLOSED"}
-
-set statesToLabel to {¬
-	"Backlog", ¬
-	"In Progress", ¬
-	"Code Complete", ¬
-	"Merged", ¬
-	"Dev Testing", ¬
-	"QA", ¬
-	"Done"}
-
-set statesToLabel_SPR_Workflow to {¬
-	"Backlog", ¬
-	"In Progress", ¬
-	"Code Complete", ¬
-	"Merged", ¬
-	"QA", ¬
-	"Done"}
-
-set statesToLabel_L3_Support_Workflow to {¬
-	"Backlog", ¬
-	"In Progress", ¬
-	"Code Complete", ¬
-	"Merged", ¬
-	"QA", ¬
-	"Done"}
 
 set statesToLabel_Release_Manual_Workflow to {¬
 	"Backlog", ¬
@@ -199,21 +201,21 @@ end if
 --- display dialog "You choose: " & ticket
 
 --- If SPR Bug Workflow, then use different set of states
-if browserIsWorkflow("SPR+Bug+Workflow") is true then
+if browserIsWorkflow("=SPR+Bug+Workflow") is true then
 	set states to states_SPR_Workflow
 	set statesTo to statesTo_SPR_Workflow
 	set statesToLabel to statesToLabel_SPR_Workflow
 end if
 
 --- If L3 Support Workflow, then use different set of states
-if browserIsWorkflow("L3+Support+Workflow") is true then
+if browserIsWorkflow("=L3+Support+Workflow") is true then
 	set states to states_L3_Support_Workflow
 	set statesTo to statesTo_L3_Support_Workflow
 	set statesToLabel to statesToLabel_L3_Support_Workflow
 end if
 
 --- If Release Manual Workflow, then use different set of states
-if browserIsWorkflow("Release+Manual") is true then
+if browserIsWorkflow("=Release+Manual") is true then
 	set states to states_Release_Manual_Workflow
 	set statesTo to statesTo_Release_Manual_Workflow
 	set statesToLabel to statesToLabel_Release_Manual_Workflow
@@ -340,7 +342,13 @@ on browserGetTicket(pos)
 		tell front window
 			tell current tab
 				set ticket to do JavaScript "
-      document.getElementsByClassName('ghx-issue')[" & (pos) & "].attributes['data-issue-key'].value + ': ' + document.getElementsByClassName('ghx-issue')[" & (pos) & "].children[0].attributes['data-tooltip'].value;"
+					var issues = document.getElementsByClassName('ghx-issue');
+					if (" & (pos) & " < issues.length) {
+					  document.getElementsByClassName('ghx-issue')[" & (pos) & "].attributes['data-issue-key'].value + ': ' +
+					  document.getElementsByClassName('ghx-issue')[" & (pos) & "].children[0].attributes['data-tooltip'].value;
+					} else {
+					  'NA';
+					}"
 			end tell
 		end tell
 	end tell
@@ -428,7 +436,9 @@ on browserGetCheckbox(value)
 				!result ? '' : result;
 				break;
               }
-          }"
+          }
+
+          if (x === -1) '';"
 				set checkId to do JavaScript cmd
 			end tell
 		end tell
