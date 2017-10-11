@@ -270,6 +270,7 @@ repeat until i > (count of actionPath)
 		action is "Sent for Design Review" or ¬
 		action is "Design Approved" or ¬
 		action is "Issue Confirmed" or ¬
+		action is "Start" or ¬
 		action is "Start Dev" or ¬
 		action is "Sent for Dev Review" or ¬
 		action is "Sent for Build" or ¬
@@ -302,6 +303,14 @@ repeat until i > (count of actionPath)
 			browserSetTextArea("Assigned Developer(s)", developerAssigned)
 			browserSetTextArea("Reviewer/Dev Lead", developerReviewerDevLead)
 			browserCheckById(browserGetCheckbox("None"))
+		end if
+
+		if action is "Start" then
+			repeat while browserGetCheckbox("None") is ""
+				delay 1
+			end repeat
+
+			browserSetTextArea("Story Points", "1")
 		end if
 
 		--- Click and wait until dialog disappears
